@@ -1,4 +1,4 @@
-package com.example.newdemo;
+package com.core.webrtclib.component;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -26,7 +26,7 @@ import org.webrtc.VideoTrack;
 import android.app.Activity;
 import android.util.Log;
 
-import com.example.newdemo.PeerConnectionClient1.PeerConnectionClientObserver;
+import com.core.webrtclib.component.PeerConnectionClient1.PeerConnectionClientObserver;
 
 public class Condutor implements MainWndCallback {
 	private static final String TAG = "Condutor";
@@ -38,6 +38,7 @@ public class Condutor implements MainWndCallback {
 	public final String kStreamLabel = "stream_label";
 	public final int kDefaultServerPort = 8888;
 	public final String kServerAddress = "10.10.62.85";
+	//public final String kServerAddress = "10.10.63.107";
 
 	public static final String kSdpMLineIndex = "sdpMLineIndex";
 	public static final String kSdpMid = "sdpMid";
@@ -131,15 +132,16 @@ public class Condutor implements MainWndCallback {
 
 		AddStreams();
 		
-		if(isVideoOn && uiCallBack != null){
-			activity.runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
+		
+		activity.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				if(uiCallBack != null){
 					uiCallBack.onMessage(UIObserver.ON_ADD_STREAM, videoSource);
 				}
-			});
-		}
+			}
+		});
 		
 		return peer_connection_ != null;
 	}
@@ -149,15 +151,15 @@ public class Condutor implements MainWndCallback {
 			peer_connection_.dispose();
 			peer_connection_ = null;
 		}
-
-		if (peer_connection_factory_ != null) {
-			peer_connection_factory_.dispose();
-			peer_connection_factory_ = null;
-		}
 		
 		if (isVideoOn && videoSource != null) {
 			videoSource.dispose();
 			videoSource = null;
+		}
+
+		if (peer_connection_factory_ != null) {
+			peer_connection_factory_.dispose();
+			peer_connection_factory_ = null;
 		}
 
 		active_streams_.clear();
@@ -225,19 +227,45 @@ public class Condutor implements MainWndCallback {
 
 		@Override
 		public void onSignalingChange(PeerConnection.SignalingState newState) {
-			Log.i(TAG, "onSignalingChange");
+			Log.i(TAG, "onSignalingChange: " + newState.toString());
 		}
 
 		@Override
 		public void onIceConnectionChange(
-				PeerConnection.IceConnectionState newState) {
-			Log.i(TAG, "onIceConnectionChange");
+				final PeerConnection.IceConnectionState newState) {
+			Log.i(TAG, "onIceConnectionChange: " + newState.toString());
+			activity.runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					if(uiCallBack == null){
+						return;
+					}
+					
+					switch(newState){
+					case CHECKING:
+						uiCallBack.onMessage(UIObserver.ON_FLAG_CHECKING, null);
+						break;
+					case CONNECTED:
+						uiCallBack.onMessage(UIObserver.ON_FLAG_CONNECTED, null);
+						break;
+					case DISCONNECTED:
+						uiCallBack.onMessage(UIObserver.ON_FLAG_DISCONNECTED, null);
+						break;
+					case CLOSED:
+						uiCallBack.onMessage(UIObserver.ON_FLAG_CLOSED, null);
+						break;
+					default:
+						break;
+					}
+				}
+			});
 		}
 
 		@Override
 		public void onIceGatheringChange(
 				PeerConnection.IceGatheringState newState) {
-			Log.i(TAG, "onIceGatheringChange");
+			Log.i(TAG, "onIceGatheringChange: " + newState.toString());
 		}
 
 		@Override
@@ -429,7 +457,7 @@ public class Condutor implements MainWndCallback {
 		public void onCreateSuccess(final SessionDescription origSdp) {
 			activity.runOnUiThread(new Runnable() {
 				public void run() {
-					Log.i(TAG, "onCreateSuccess" + origSdp.type);
+					Log.i(TAG, "onCreateSuccess " + origSdp.type);
 					SessionDescription sdp = new SessionDescription(
 							origSdp.type, preferISAC(origSdp.description));
 					JSONObject json = new JSONObject();
@@ -437,6 +465,10 @@ public class Condutor implements MainWndCallback {
 					jsonPut(json, "sdp", sdp.description);
 					sendMessage(json);
 					peer_connection_.setLocalDescription(sdpObserver, sdp);
+					
+					if(uiCallBack!= null){
+						uiCallBack.onMessage(UIObserver.ON_FLAG_CREATE, null);
+					}
 				}
 			});
 		}

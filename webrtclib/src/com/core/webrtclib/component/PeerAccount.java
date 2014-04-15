@@ -1,4 +1,4 @@
-package com.example.newdemo;
+package com.core.webrtclib.component;
 
 public class PeerAccount {
 

@@ -3,13 +3,11 @@ package com.example.newdemo;
 import java.util.HashMap;
 
 import org.webrtc.PeerConnectionFactory;
-import org.webrtc.VideoSource;
 
 import android.app.Activity;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -18,16 +16,21 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 
+import com.core.webrtclib.component.Condutor;
+import com.core.webrtclib.component.PeerAccount;
+import com.core.webrtclib.component.UIObserver;
+import com.core.webrtclib.component.VideoStreamsView;
+
+
 public class TestActivity extends Activity {
 
 	private Condutor mCondutor;
 	private ListView mList;
 	private PeerAdapter mAdapter;
 
-	private VideoSource videoSource;
 	private VideoStreamsView vsv;
 
-	private final boolean isVideoOn = true;
+	private final boolean isVideoOn = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -120,10 +123,12 @@ public class TestActivity extends Activity {
 				break;
 			case UIObserver.ON_ADD_STREAM:
 				vsv.setVisibility(View.VISIBLE);
-				videoSource = (VideoSource)data;
 				break;
-			case UIObserver.ON_REMOVE_STREAM:
-				vsv.setVisibility(View.GONE);	
+			case UIObserver.ON_FLAG_DISCONNECTED:
+				vsv.setVisibility(View.GONE);
+				mCondutor.Close();
+				// 只维护一次通话，对方挂断就结束了
+				finish();
 				break;
 			}
 		}

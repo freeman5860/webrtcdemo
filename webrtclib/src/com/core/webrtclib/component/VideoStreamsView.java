@@ -25,7 +25,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.example.newdemo;
+package com.core.webrtclib.component;
 
 import android.content.Context;
 import android.graphics.Point;

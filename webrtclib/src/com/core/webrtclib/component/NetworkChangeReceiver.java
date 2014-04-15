@@ -1,12 +1,18 @@
-package com.example.newdemo;
+package com.core.webrtclib.component;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.core.webrtclib.service.WebRTCService;
+
 public class NetworkChangeReceiver {
 	public static boolean hasNetwork() {
-		ConnectivityManager cm = (ConnectivityManager) MyApplication.getContext()
+		if(WebRTCService.getContext() == null){
+			return false;
+		}
+		
+		ConnectivityManager cm = (ConnectivityManager) WebRTCService.getContext()
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		if (cm == null) { 
 			

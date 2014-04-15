@@ -1,4 +1,4 @@
-package com.example.newdemo;
+package com.core.webrtclib.component;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;

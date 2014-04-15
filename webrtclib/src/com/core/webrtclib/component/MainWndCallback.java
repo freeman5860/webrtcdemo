@@ -1,4 +1,4 @@
-package com.example.newdemo;
+package com.core.webrtclib.component;
 
 public interface MainWndCallback {
 	 void StartLogin(String server, int port); 

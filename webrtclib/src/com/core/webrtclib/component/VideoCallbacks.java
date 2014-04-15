@@ -1,4 +1,4 @@
-package com.example.newdemo;
+package com.core.webrtclib.component;
 
 import org.webrtc.VideoRenderer;
 import org.webrtc.VideoRenderer.I420Frame;
