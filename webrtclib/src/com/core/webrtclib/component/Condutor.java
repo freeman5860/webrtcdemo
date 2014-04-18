@@ -317,10 +317,19 @@ public class Condutor implements MainWndCallback {
 
 		@Override
 		public void onSignedIn() {
+			final int my_id = client_.my_id_;
+			
 			Log.d(TAG, "onSignedIn() init");
-			if (uiCallBack != null) {
-				uiCallBack.onMessage(UIObserver.ON_SINGED_IN, null);
-			}
+			
+			activity.runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					if (uiCallBack != null) {
+						uiCallBack.onMessage(UIObserver.ON_SINGED_IN, my_id);
+					}
+				}
+			});
 		}
 
 		@Override
