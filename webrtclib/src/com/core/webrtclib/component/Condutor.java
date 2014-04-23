@@ -36,9 +36,8 @@ public class Condutor implements MainWndCallback {
 	public final String kAudioLabel = "audio_label";
 	public final String kVideoLabel = "video_label";
 	public final String kStreamLabel = "stream_label";
-	public final int kDefaultServerPort = 8888;
 	public final String kServerAddress = "10.10.62.85";
-	//public final String kServerAddress = "10.10.63.107";
+	public final int kDefaultServerPort = 8888;
 
 	public static final String kSdpMLineIndex = "sdpMLineIndex";
 	public static final String kSdpMid = "sdpMid";
@@ -116,11 +115,14 @@ public class Condutor implements MainWndCallback {
 		pcCon.mandatory.add(new MediaConstraints.KeyValuePair("", ""));
 		pcCon.mandatory.add(new MediaConstraints.KeyValuePair("", ""));
 		List<PeerConnection.IceServer> iceServers = new LinkedList<PeerConnection.IceServer>();
+		/**
 		iceServers.add(new PeerConnection.IceServer(
 				"stun:stun.l.google.com:19302", "", ""));
 		iceServers.add(new PeerConnection.IceServer(
 				"turn:23.251.136.90:3478?transport=udp", "1397189064:02945980",
-				"s4r4zdeH40pO942jwB4+fjhKs6M="));
+				"s4r4zdeH40pO942jwB4+fjhKs6M="));**/
+		iceServers.add(new PeerConnection.IceServer("stun:eim.szcomtop.com:3478","",""));
+		iceServers.add(new PeerConnection.IceServer("turn:eim.szcomtop.com:3478", "toto", "password"));
 
 		peer_connection_ = peer_connection_factory_.createPeerConnection(
 				iceServers, pcCon, pcObserver);

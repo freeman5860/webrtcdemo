@@ -30,7 +30,7 @@ public class TestActivity extends Activity {
 
 	private VideoStreamsView vsv;
 
-	private final boolean isVideoOn = false;
+	private final boolean isVideoOn = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
