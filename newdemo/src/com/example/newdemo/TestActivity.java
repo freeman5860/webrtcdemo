@@ -30,7 +30,7 @@ public class TestActivity extends Activity {
 
 	private VideoStreamsView vsv;
 
-	private final boolean isVideoOn = true;
+	private final boolean isVideoOn = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +58,12 @@ public class TestActivity extends Activity {
 		// TODO(fischman): figure out how to do this Right(tm) and remove the
 		// suppression.
 		@SuppressWarnings("deprecation")
-		boolean isWiredHeadsetOn = audioManager.isWiredHeadsetOn();
+		//boolean isWiredHeadsetOn = audioManager.isWiredHeadsetOn();
+		boolean isWiredHeadsetOn = true;
 		audioManager.setMode(isWiredHeadsetOn ? AudioManager.MODE_IN_CALL
 				: AudioManager.MODE_IN_COMMUNICATION);
 		audioManager.setSpeakerphoneOn(!isWiredHeadsetOn);
+		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 
 		mCondutor = new Condutor(this, isVideoOn);
 		if (isVideoOn) {

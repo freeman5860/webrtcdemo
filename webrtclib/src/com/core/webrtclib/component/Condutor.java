@@ -91,8 +91,9 @@ public class Condutor implements MainWndCallback {
 		sdpMediaConstraints = new MediaConstraints();
 		sdpMediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair(
 				"OfferToReceiveAudio", "true"));
+		/*
 		sdpMediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair(
-				"OfferToReceiveVideo", "true"));
+				"OfferToReceiveVideo", "true"));*/
 
 		client_ = new PeerConnectionClient1();
 		peer_id_ = -1;
@@ -177,7 +178,7 @@ public class Condutor implements MainWndCallback {
 		MediaStream stream = peer_connection_factory_
 				.createLocalMediaStream(kStreamLabel);
 		AudioTrack audio_track = peer_connection_factory_
-				.createAudioTrack(kAudioLabel);
+				.createAudioTrack(kAudioLabel,peer_connection_factory_.createAudioSource(new MediaConstraints()));
 
 		if (isVideoOn) {
 			VideoCapturer capturer = getVideoCapturer();
@@ -309,6 +310,12 @@ public class Condutor implements MainWndCallback {
 									+ dc.label() + " anyway!");
 				}
 			});
+		}
+
+		@Override
+		public void onRenegotiationNeeded() {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 
